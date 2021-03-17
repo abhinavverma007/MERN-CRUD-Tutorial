@@ -34,6 +34,30 @@ app.get("/read",async (req,res)=>{
         res.send(result);
     });
 });
+app.put('/update', async (req,res)=>{
+    const newFood=req.body.updateFood;
+    const id=req.body.id;
+    
+    try{
+        // telling database to save
+        await foodModel.findById( id,(err, updatedFood) => {
+            updatedFood.foodName=newFood;
+            updatedFood.save();
+            res.send('updated');
+        })
+    }catch(err){
+        console.log(err);
+    }
+});
+
+app.delete("/delete/:id",async (req,res)=>{
+    // find {} empty because we want all data
+    const id=req.params.id;
+    await foodModel.findByIdAndRemove(id).exec();
+    res.send("deleted");
+    
+});
+
 app.listen(3001,()=>{
     console.log("Server running on port 3001");
 });
